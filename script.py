@@ -17,10 +17,19 @@ def process_excel_file(file_path):
     data_xls = pd.read_excel(file_path, index_col=None)
 
     def extract_custom(value):
+        # match for 12 digits start from 1
         match = re.search(r'\b1\d{11}\b', str(value))
+        # match for 11 digits start from 2
+        match_2 = re.search(r'\b2\d{11}\b', str(value))
         # match = re.search(r'1\d{6}(?!(00010))\d{5}', str(value))
         # match = re.search(r'1\d{11}', str(value))
-        return match.group() if match else None
+        if match:
+            return match.group()
+        elif match_2:
+            return match_2.group()
+        else:
+            return None
+        # return match.group() if match else None
 
     # Apply the custom function to the "Unnamed: 20" column
     data_xls["Unnamed: 20"] = data_xls["Unnamed: 20"].apply(extract_custom)
